@@ -1,4 +1,4 @@
-var http = require('http') // ppppppppp
+var http = require('http'
 var express = require('express')
 var cookieParser = require('cookie-parser')
 var path = require("path");
