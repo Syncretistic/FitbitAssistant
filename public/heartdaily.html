@@ -1,0 +1,26 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Heartrate daily</title>
+  <meta name="description" content="Heartrate daily">
+  <meta name="author" content="Saverio Salaris">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <ul>
+    <li><a href="/home">HOME</a></li>
+      <li><a href="/heartsum">SUMMARY</a></li>
+      <li><a href="/heartdaily">DAILY</a></li>
+      <li><a href="/heartint">INTRADAILY</a></li>
+  </ul> 
+	<form action ="/heartdaily" method="post">
+		<label for="minForm"><b>Insert date (yyyy-mm-dd)</b></label>
+	    <input type="text" placeholder="Starting Date" name="startDate" required>
+      <br>
+	    <button type="submit" formmethod="post">Send</button>
+   </form></body>
+</html>

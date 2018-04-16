@@ -1,0 +1,26 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Heartrate Summary</title>
+  <meta name="description" content="Heartrate Summary">
+  <meta name="author" content="Saverio Salaris">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <ul>
+    <li><a href="/home">HOME</a></li>
+      <li><a href="/heartsum">SUMMARY</a></li>
+      <li><a href="/heartdaily">DAILY</a></li>
+      <li><a href="/heartint">INTRADAILY</a></li>
+  </ul> 
+	<form action ="/heartsum" method="post">
+		<label for="minForm"><b>Insert number of minutes</b></label>
+	    <input type="number" placeholder="Minutes" name="minutes" required>
+      <br>
+	    <button type="submit" formmethod="post">Send</button>
+   </form></body>
+</html>
