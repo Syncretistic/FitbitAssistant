@@ -4,11 +4,51 @@ var cookieParser = require('cookie-parser')
 var path = require("path");
 var app = express()
 var bodyParser = require('body-parser')
+var events = require('events');
+var tools = require('./tools')
+var loginEmitter = new events.EventEmitter(); 
+//middleware
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
-
+//global variables
 var dynamicPaths = ['/home', '/heartsum','/heartint','/heartdaily']
+var loggedUser = {}
+
+// login listener
+
+var loginHandler = function () {
+  	setInterval(() => {
+  		var body = ''
+		var userid = loggedUser.userid
+		var token = loggedUser.token
+		var startDate = tools.today()
+		var endDate = startDate
+		var apiActivityDaily = 'http://34.252.198.73:8080/fitbit/activity/daily/'+userid+'/'+startDate+'/'+endDate+'/'+token
+		http.get(apiActivityDaily, function(response) {
+		response.on('error', function(err) {
+						console.log(err)
+					}).on('data', function(chunk) {
+						body += chunk
+					}).on('end', function() {
+						body = JSON.parse(body)
+						steps = body.body.data[0].steps
+						if (steps === 0) {
+							console.log('Congratulations! Once again you managed to avoid physical activity! 0 steps today!')
+						} else if (steps >= 5000) {
+							console.log('JACKPOT! 5000 STEPS!')
+						} else {
+							console.log(steps + ' steps today. Keep it going!')
+						}
+						
+					})
+		})
+	}, 5000);
+}
+
+loginEmitter.once('userLogged', loginHandler)
+
+
 
 app.use(dynamicPaths, function(req, res, next){
 	if (!req.cookies.userData) {
@@ -18,7 +58,9 @@ app.use(dynamicPaths, function(req, res, next){
 			return res.redirect('/login')	
     	}	
 	} else {
-			next();
+		loggedUser = req.cookies.userData
+		loginEmitter.emit('userLogged');
+		next();
 	}
 })
 
@@ -261,6 +303,7 @@ app.route('/login')
 							}).on('end', function() {
 								body = JSON.parse(body)
 								cookie.userid = body[0].id
+								loggedUser = cookie
 								res.cookie("userData", cookie, {maxAge: 1800000})
 								return res.redirect('/home')
 							})
@@ -272,6 +315,7 @@ app.route('/login')
 app.get('*', function(req, res){
   res.status(404).send('No siterino');
 });
+
 
 app.listen(8080, function() {
 			console.log('Listening on port 8080...')
